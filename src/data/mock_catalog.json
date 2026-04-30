@@ -1,0 +1,218 @@
+[
+  {
+    "name": "NVIDIA GeForce RTX 4070 Founders Edition",
+    "category": "GPU",
+    "price_eur": 619.0,
+    "store": "TechMarket",
+    "url": "https://example.com/rtx-4070-fe",
+    "thumbnail": "https://placehold.co/400x300?text=RTX+4070"
+  },
+  {
+    "name": "ASUS ROG Strix RTX 4070 OC",
+    "category": "GPU",
+    "price_eur": 689.0,
+    "store": "PartsHub",
+    "url": "https://example.com/asus-rtx-4070-strix",
+    "thumbnail": "https://placehold.co/400x300?text=ROG+4070"
+  },
+  {
+    "name": "AMD Radeon RX 7800 XT",
+    "category": "GPU",
+    "price_eur": 539.0,
+    "store": "TechMarket",
+    "url": "https://example.com/rx-7800-xt",
+    "thumbnail": "https://placehold.co/400x300?text=RX+7800+XT"
+  },
+  {
+    "name": "NVIDIA GeForce RTX 4060 Ti 8GB",
+    "category": "GPU",
+    "price_eur": 419.0,
+    "store": "PartsHub",
+    "url": "https://example.com/rtx-4060-ti",
+    "thumbnail": "https://placehold.co/400x300?text=RTX+4060+Ti"
+  },
+  {
+    "name": "NVIDIA GeForce RTX 4080 Super",
+    "category": "GPU",
+    "price_eur": 1099.0,
+    "store": "TechMarket",
+    "url": "https://example.com/rtx-4080-super",
+    "thumbnail": "https://placehold.co/400x300?text=RTX+4080+Super"
+  },
+  {
+    "name": "AMD Ryzen 7 7800X3D",
+    "category": "CPU",
+    "price_eur": 419.0,
+    "store": "TechMarket",
+    "url": "https://example.com/ryzen-7-7800x3d",
+    "thumbnail": "https://placehold.co/400x300?text=Ryzen+7800X3D"
+  },
+  {
+    "name": "AMD Ryzen 5 7600",
+    "category": "CPU",
+    "price_eur": 219.0,
+    "store": "PartsHub",
+    "url": "https://example.com/ryzen-5-7600",
+    "thumbnail": "https://placehold.co/400x300?text=Ryzen+5+7600"
+  },
+  {
+    "name": "Intel Core i5-13600K",
+    "category": "CPU",
+    "price_eur": 299.0,
+    "store": "TechMarket",
+    "url": "https://example.com/i5-13600k",
+    "thumbnail": "https://placehold.co/400x300?text=i5-13600K"
+  },
+  {
+    "name": "Intel Core i7-14700K",
+    "category": "CPU",
+    "price_eur": 449.0,
+    "store": "PartsHub",
+    "url": "https://example.com/i7-14700k",
+    "thumbnail": "https://placehold.co/400x300?text=i7-14700K"
+  },
+  {
+    "name": "MSI MAG B650 Tomahawk WiFi",
+    "category": "Motherboard",
+    "price_eur": 219.0,
+    "store": "TechMarket",
+    "url": "https://example.com/b650-tomahawk",
+    "thumbnail": "https://placehold.co/400x300?text=B650+Tomahawk"
+  },
+  {
+    "name": "ASUS TUF Gaming X670E-Plus WiFi",
+    "category": "Motherboard",
+    "price_eur": 339.0,
+    "store": "PartsHub",
+    "url": "https://example.com/tuf-x670e",
+    "thumbnail": "https://placehold.co/400x300?text=X670E-Plus"
+  },
+  {
+    "name": "Gigabyte Z790 Aorus Elite AX",
+    "category": "Motherboard",
+    "price_eur": 289.0,
+    "store": "TechMarket",
+    "url": "https://example.com/z790-aorus-elite",
+    "thumbnail": "https://placehold.co/400x300?text=Z790+Aorus"
+  },
+  {
+    "name": "Corsair Vengeance DDR5 32GB (2x16) 6000MT/s CL30",
+    "category": "RAM",
+    "price_eur": 119.0,
+    "store": "TechMarket",
+    "url": "https://example.com/corsair-ddr5-32gb-6000",
+    "thumbnail": "https://placehold.co/400x300?text=DDR5+32GB"
+  },
+  {
+    "name": "G.Skill Trident Z5 DDR5 64GB (2x32) 6000MT/s CL30",
+    "category": "RAM",
+    "price_eur": 239.0,
+    "store": "PartsHub",
+    "url": "https://example.com/gskill-ddr5-64gb",
+    "thumbnail": "https://placehold.co/400x300?text=DDR5+64GB"
+  },
+  {
+    "name": "Kingston Fury Beast DDR5 16GB (2x8) 5200MT/s",
+    "category": "RAM",
+    "price_eur": 69.0,
+    "store": "TechMarket",
+    "url": "https://example.com/kingston-fury-16gb",
+    "thumbnail": "https://placehold.co/400x300?text=DDR5+16GB"
+  },
+  {
+    "name": "Samsung 990 Pro 2TB NVMe Gen4",
+    "category": "SSD",
+    "price_eur": 179.0,
+    "store": "TechMarket",
+    "url": "https://example.com/samsung-990-pro-2tb",
+    "thumbnail": "https://placehold.co/400x300?text=990+Pro+2TB"
+  },
+  {
+    "name": "WD Black SN850X 1TB NVMe Gen4",
+    "category": "SSD",
+    "price_eur": 99.0,
+    "store": "PartsHub",
+    "url": "https://example.com/wd-sn850x-1tb",
+    "thumbnail": "https://placehold.co/400x300?text=SN850X+1TB"
+  },
+  {
+    "name": "Crucial T700 4TB NVMe Gen5",
+    "category": "SSD",
+    "price_eur": 519.0,
+    "store": "TechMarket",
+    "url": "https://example.com/crucial-t700-4tb",
+    "thumbnail": "https://placehold.co/400x300?text=T700+4TB"
+  },
+  {
+    "name": "Corsair RM850x 850W 80+ Gold ATX 3.0",
+    "category": "PSU",
+    "price_eur": 159.0,
+    "store": "TechMarket",
+    "url": "https://example.com/corsair-rm850x",
+    "thumbnail": "https://placehold.co/400x300?text=RM850x"
+  },
+  {
+    "name": "be quiet! Pure Power 12 M 750W 80+ Gold",
+    "category": "PSU",
+    "price_eur": 119.0,
+    "store": "PartsHub",
+    "url": "https://example.com/bequiet-pp12-750",
+    "thumbnail": "https://placehold.co/400x300?text=PP12+750W"
+  },
+  {
+    "name": "Seasonic Focus GX-1000 1000W 80+ Gold",
+    "category": "PSU",
+    "price_eur": 199.0,
+    "store": "TechMarket",
+    "url": "https://example.com/seasonic-gx-1000",
+    "thumbnail": "https://placehold.co/400x300?text=GX-1000"
+  },
+  {
+    "name": "Fractal Design North ATX Mid Tower",
+    "category": "Case",
+    "price_eur": 149.0,
+    "store": "TechMarket",
+    "url": "https://example.com/fractal-north",
+    "thumbnail": "https://placehold.co/400x300?text=Fractal+North"
+  },
+  {
+    "name": "NZXT H7 Flow ATX Mid Tower",
+    "category": "Case",
+    "price_eur": 119.0,
+    "store": "PartsHub",
+    "url": "https://example.com/nzxt-h7-flow",
+    "thumbnail": "https://placehold.co/400x300?text=NZXT+H7+Flow"
+  },
+  {
+    "name": "Lian Li O11 Dynamic EVO",
+    "category": "Case",
+    "price_eur": 179.0,
+    "store": "TechMarket",
+    "url": "https://example.com/lianli-o11-evo",
+    "thumbnail": "https://placehold.co/400x300?text=O11+EVO"
+  },
+  {
+    "name": "Noctua NH-D15 chromax.black",
+    "category": "Cooler",
+    "price_eur": 119.0,
+    "store": "PartsHub",
+    "url": "https://example.com/noctua-nh-d15",
+    "thumbnail": "https://placehold.co/400x300?text=NH-D15"
+  },
+  {
+    "name": "Arctic Liquid Freezer III 360",
+    "category": "Cooler",
+    "price_eur": 109.0,
+    "store": "TechMarket",
+    "url": "https://example.com/arctic-lf3-360",
+    "thumbnail": "https://placehold.co/400x300?text=LF+III+360"
+  },
+  {
+    "name": "be quiet! Dark Rock Pro 5",
+    "category": "Cooler",
+    "price_eur": 99.0,
+    "store": "PartsHub",
+    "url": "https://example.com/bequiet-drp5",
+    "thumbnail": "https://placehold.co/400x300?text=Dark+Rock+Pro+5"
+  }
+]
