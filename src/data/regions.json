@@ -1,0 +1,18 @@
+{
+    "Serbia": {
+      "domains": ["gigatron.rs", "bcgroup-online.com", "itsvet.com", "eponuda.com", "kupujemprodajem.com", "winwin.rs", "tehnomanija.rs", "tehnomedija.rs", "comtradeshop.com"],
+      "priority_keywords": ["RSD", "Beograd", "Srbija"]
+    },
+    "Croatia": {
+      "domains": ["links.hr", "instar-informatika.hr", "protis.hr", "nabava.net", "mikronis.hr"],
+      "priority_keywords": ["EUR", "Zagreb", "Hrvatska"]
+    },
+    "Bosnia": {
+      "domains": ["olx.ba", "genelec.ba", "imtec.ba", "plus.ba"],
+      "priority_keywords": ["KM", "Sarajevo", "BiH"]
+    },
+    "Montenegro": {
+      "domains": ["datalab.me", "multicom.me", "pc-centar.me"],
+      "priority_keywords": ["EUR", "Podgorica", "Crna Gora"]
+    }
+  }
