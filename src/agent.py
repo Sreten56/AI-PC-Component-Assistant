@@ -41,14 +41,14 @@ def build_consultant_agent() -> FunctionCallingAgent:
     return _build_agent(
         tools=[search_pc_prices_tool],
         system_prompt=CONSULTANT_SYSTEM_PROMPT,
-        verbose=True,
+        verbose=False,
     )
 
 
-def build_guide_agent() -> FunctionCallingAgent:
-    """Return a tool-less agent for the assembly guide."""
+def build_guide_agent(system_prompt: str | None = None) -> FunctionCallingAgent:
+    """Return a tool-less agent for the assembly guide (optional system prompt override)."""
     return _build_agent(
         tools=[],
-        system_prompt=ASSEMBLY_GUIDE_SYSTEM_PROMPT,
+        system_prompt=system_prompt or ASSEMBLY_GUIDE_SYSTEM_PROMPT,
         verbose=False,
     )

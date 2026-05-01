@@ -1,7 +1,9 @@
-# Environment
+# Environment (secrets — never commit)
 .env
 .env.local
 .streamlit/secrets.toml
+
+# Note: src/static/images/ is intentionally tracked for the assembly guide.
 
 # Python
 __pycache__/

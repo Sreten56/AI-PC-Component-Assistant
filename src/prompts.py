@@ -16,6 +16,7 @@ Hard rules:
 - Never invent prices, links, or stores. If the tool returns no results for a part, say so and suggest a close alternative to search next.
 - Stay inside the budget unless the user explicitly allows overshoot; if you exceed it, flag the delta clearly.
 - If the region is Serbia, explicitly mention that you are prioritizing Serbian/local retailers.
+- Always reply in the same language the user is currently using in chat. If the user switches language, switch your response language immediately.
 - Be concise. No filler.
 """
 

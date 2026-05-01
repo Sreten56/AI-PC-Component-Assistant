@@ -3,17 +3,48 @@
 from __future__ import annotations
 
 import logging
+import re
 from typing import Any
 
 import streamlit as st
 
 from src.agent import AgentBuildError, build_consultant_agent
 from src.ui.components import render_product_grid
+from src.ui.sanitize import sanitize_chat_input
 
 logger = logging.getLogger(__name__)
 
 _AGENT_KEY = "consultant_agent"
 _HISTORY_KEY = "consultant_history"
+
+
+def _clean_assistant_text(raw_text: str) -> str:
+    """Hide tool-call traces and thought markers from the UI."""
+    text = (raw_text or "").strip()
+    if not text:
+        return ""
+
+    # Remove common thought blocks.
+    text = re.sub(r"(?is)<think>.*?</think>", "", text)
+    text = re.sub(r"(?is)\[THOUGHT\].*?\[/THOUGHT\]", "", text)
+
+    filtered_lines: list[str] = []
+    for line in text.splitlines():
+        striped = line.strip()
+        lower = striped.lower()
+        if (
+            "search_pc_prices(" in lower
+            or lower.startswith("action:")
+            or lower.startswith("observation:")
+            or lower.startswith("tool:")
+            or lower.startswith("function call:")
+            or lower.startswith("assistant_thought:")
+        ):
+            continue
+        filtered_lines.append(line)
+
+    cleaned = "\n".join(filtered_lines).strip()
+    return cleaned or "I found relevant listings and prepared your recommendation above."
 
 
 def _get_agent():
@@ -70,7 +101,8 @@ def render_chat_view() -> None:
 
     _render_history()
 
-    user_message = st.chat_input("e.g. I have 1200\u20ac for 1440p gaming")
+    user_message_raw = st.chat_input("e.g. I have 1200\u20ac for 1440p gaming")
+    user_message = sanitize_chat_input(user_message_raw or "")
     if not user_message:
         return
 
@@ -92,7 +124,7 @@ def render_chat_view() -> None:
                 )
                 return
 
-        answer = str(response)
+        answer = _clean_assistant_text(str(response))
         product_grids = _extract_tool_results(response)
         st.markdown(answer)
         for grid in product_grids:

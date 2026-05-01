@@ -1,4 +1,8 @@
-"""Streamlit entry point for the PC AI Component Assistant."""
+"""Streamlit entry point for the PC AI Component Assistant.
+
+Default appearance (including dark theme) is configured in ``.streamlit/config.toml``.
+Users can switch theme under Streamlit menu → Settings → Theme.
+"""
 
 from __future__ import annotations
 

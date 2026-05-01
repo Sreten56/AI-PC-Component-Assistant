@@ -6,6 +6,7 @@ import streamlit as st
 
 from src.tools.price_search import search_pc_prices
 from src.ui.components import render_product_grid
+from src.ui.sanitize import sanitize_chat_input
 
 _CATEGORIES = ["Auto", "CPU", "GPU", "Motherboard", "RAM", "SSD", "PSU", "Case", "Cooler"]
 
@@ -44,7 +45,9 @@ def render_search_view() -> None:
         st.caption("Hit *Search* to fetch live listings.")
         return
 
-    if not query.strip():
+    query_clean = sanitize_chat_input(query)
+    region_clean = sanitize_chat_input(region)
+    if not query_clean:
         st.warning("Please enter a component to search for.")
         return
 
@@ -52,12 +55,14 @@ def render_search_view() -> None:
         try:
             effective_max_price = float(max_price) if use_max else None
             effective_category = None if selected_category == "Auto" else selected_category
-            refined_query = f"{query.strip()} {effective_category}" if effective_category else query.strip()
+            refined_query = (
+                f"{query_clean} {effective_category}" if effective_category else query_clean
+            )
             results = search_pc_prices(
                 refined_query,
                 max_price=effective_max_price,
                 limit=9,
-                region=region.strip() or "Serbia",
+                region=region_clean.strip() or "Serbia",
                 category=effective_category,
             )
         except Exception as exc:  # noqa: BLE001 - surface tool failure to user
@@ -71,6 +76,6 @@ def render_search_view() -> None:
     )
     category_note = f" [{selected_category}]" if selected_category != "Auto" else ""
     st.subheader(
-        f"Results for \u201c{query.strip()}{category_note}\u201d in {region.strip() or 'Serbia'}{filter_note}"
+        f"Results for \u201c{query_clean}{category_note}\u201d in {region_clean.strip() or 'Serbia'}{filter_note}"
     )
     render_product_grid(results, columns=3, key_prefix="search")

@@ -1,7 +1,8 @@
-"""Centralised configuration loaded from a `.env` file.
+"""Centralised configuration from environment variables.
 
-All secrets, base URLs, and model names flow through this module so nothing
-is hardcoded elsewhere in the codebase.
+Values are read only from ``os.environ`` (after optional ``python-dotenv``
+load of a local ``.env`` for development). Production deployments should
+inject secrets via the environment and must not log raw API keys.
 """
 
 from __future__ import annotations
@@ -18,6 +19,16 @@ load_dotenv(_PROJECT_ROOT / ".env")
 
 class ConfigError(RuntimeError):
     """Raised when required configuration is missing or invalid."""
+
+
+def redact_secret(value: str, *, head: int = 4, tail: int = 2) -> str:
+    """Return a non-reversible hint for logs; never use for authentication."""
+    if not value:
+        return "(empty)"
+    s = str(value).strip()
+    if len(s) <= head + tail:
+        return "***"
+    return f"{s[:head]}…{s[-tail:]}"
 
 
 @dataclass(frozen=True)

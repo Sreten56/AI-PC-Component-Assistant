@@ -1,0 +1,3 @@
+# Default UI theme (users can override in Streamlit menu → Settings → Theme).
+[theme]
+base = "dark"
