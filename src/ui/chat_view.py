@@ -24,6 +24,13 @@ def _clean_assistant_text(raw_text: str) -> str:
     if not text:
         return ""
 
+    # Remove Serbian tool-call lead-ins and everything until result sections.
+    text = re.sub(
+        r"(?is)Pozivam alat\.\.\..*?(?=(Rezultat|Rezultati|Evo|Preporuka|Predlog|$))",
+        "",
+        text,
+    )
+
     # Remove common thought blocks.
     text = re.sub(r"(?is)<think>.*?</think>", "", text)
     text = re.sub(r"(?is)\[THOUGHT\].*?\[/THOUGHT\]", "", text)
@@ -39,6 +46,7 @@ def _clean_assistant_text(raw_text: str) -> str:
             or lower.startswith("tool:")
             or lower.startswith("function call:")
             or lower.startswith("assistant_thought:")
+            or lower.startswith("pozivam alat")
         ):
             continue
         filtered_lines.append(line)

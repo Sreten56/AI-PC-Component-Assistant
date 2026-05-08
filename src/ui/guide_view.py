@@ -6,9 +6,12 @@ import logging
 import os
 import pathlib
 from copy import deepcopy
+from io import BytesIO
 from typing import Any
 
+import requests
 import streamlit as st
+from PIL import Image
 
 from src.data.assembly_data import ASSEMBLY_STEPS_BY_LANG, EXTRA_ASSETS
 from src.tools.price_search import search_guide_answer, search_step_illustration
@@ -17,6 +20,7 @@ from src.ui.sanitize import sanitize_chat_input
 logger = logging.getLogger(__name__)
 
 _PROJECT_ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
+_PLACEHOLDER_PATH = "src/static/images/placeholder.jpg"
 _HISTORY_KEY = "guide_history"
 _LANG_OPTIONS = (
     ("English", "EN"),
@@ -123,6 +127,53 @@ def _resolve_local_image_path(relative_path: str) -> str | None:
     return full_path
 
 
+def _load_local_image(relative_path: str) -> Image.Image | None:
+    """Load local image using project-root-joined relative path."""
+    full_path = os.path.join(str(_PROJECT_ROOT), relative_path)
+    if not os.path.exists(full_path):
+        return None
+    ext = pathlib.Path(full_path).suffix.lower()
+    if ext not in {".jpg", ".jpeg", ".png", ".gif", ".webp"}:
+        return None
+    try:
+        with Image.open(full_path) as img:
+            return img.copy()
+    except OSError:
+        logger.warning("Failed to open local image: %s", full_path)
+        return None
+
+
+def _load_local_image_object(relative_path: str) -> Image.Image | None:
+    return _load_local_image(relative_path)
+
+
+def _get_placeholder_image() -> Image.Image | None:
+    placeholder = _load_local_image_object(_PLACEHOLDER_PATH)
+    if placeholder is None:
+        logger.warning("Placeholder image not found at: %s", _PLACEHOLDER_PATH)
+    return placeholder
+
+
+def dynamic_step_image(image_candidate: str | None) -> Image.Image | str | None:
+    """Return a valid dynamic image or local placeholder if unavailable."""
+    candidate = (image_candidate or "").strip()
+    if not candidate:
+        return _get_placeholder_image()
+
+    if candidate.startswith(("http://", "https://")):
+        try:
+            resp = requests.get(candidate, timeout=6)
+            resp.raise_for_status()
+            with Image.open(BytesIO(resp.content)) as img:
+                return img.copy()
+        except Exception:  # noqa: BLE001
+            logger.warning("Dynamic URL image failed, using placeholder: %s", candidate)
+            return _get_placeholder_image()
+
+    local_img = _load_local_image_object(candidate)
+    return local_img or _get_placeholder_image()
+
+
 def _steps_for_display_language(language_code: str) -> list[dict[str, Any]]:
     steps = ASSEMBLY_STEPS_BY_LANG.get(language_code) or ASSEMBLY_STEPS_BY_LANG["EN"]
     return deepcopy(steps)
@@ -130,11 +181,27 @@ def _steps_for_display_language(language_code: str) -> list[dict[str, Any]]:
 
 def _build_master_language_query(user_message: str, language_code: str) -> str:
     target_language = _LANGUAGE_NAMES.get(language_code, "English")
+    detailed_prefix = (
+        "Pruži detaljno, stručno i opširno uputstvo za sledeći zadatak sklapanja: "
+        f"{user_message}"
+    )
     return (
+        f"{detailed_prefix}\n"
         f"Answer strictly in {target_language}. "
         "Do not switch language. "
-        f"Question: {user_message}"
+        "If the question is off-topic, clearly explain scope limits."
     )
+
+
+def _split_special_note(answer: str) -> tuple[str, str]:
+    marker = "Note: I am an assistant specialized"
+    text = (answer or "").strip()
+    idx = text.find(marker)
+    if idx == -1:
+        return text, ""
+    short_answer = text[:idx].strip()
+    note = text[idx:].strip()
+    return short_answer, note
 
 
 def _render_static_steps(steps: list[dict[str, Any]], labels: dict[str, str]) -> None:
@@ -143,11 +210,12 @@ def _render_static_steps(steps: list[dict[str, Any]], labels: dict[str, str]) ->
             st.markdown(f"### {step['step']}. {step['title']}")
             cols = st.columns([1, 2])
             with cols[0]:
-                image_path = _resolve_local_image_path(step["image_path"])
-                if image_path:
-                    st.image(image_path, use_container_width=True)
-                else:
-                    st.error(f"{labels['missing_file']}: {step['image_path']}")
+                step_image = _load_local_image(step.get("image_path", ""))
+                if step_image is None:
+                    step_image = _get_placeholder_image()
+                    st.warning(f"{labels['missing_file']}: {step.get('image_path', '')}")
+                if step_image is not None:
+                    st.image(step_image, use_container_width=True)
             with cols[1]:
                 st.markdown(step["text"])
 
@@ -199,16 +267,19 @@ def render_guide_view() -> None:
                 _build_master_language_query(user_message, language_code),
                 region="global",
             )
+            short_answer, special_note = _split_special_note(answer)
 
             display_img: Any = local_img_path
             if not display_img:
                 display_img = search_step_illustration(user_message, region="global")
+            display_img = dynamic_step_image(display_img)
 
             st.session_state[_HISTORY_KEY].append(
                 {
                     "mode": "dynamic",
                     "prompt": user_message,
-                    "answer": answer,
+                    "answer": short_answer or answer,
+                    "special_note": special_note,
                     "image": display_img,
                     "language": language_code,
                 }
@@ -230,6 +301,12 @@ def render_guide_view() -> None:
                     image = entry.get("image")
                     if image:
                         st.image(image, use_container_width=True)
+                    else:
+                        placeholder = _get_placeholder_image()
+                        if placeholder is not None:
+                            st.image(placeholder, use_container_width=True)
                 with cols[1]:
                     st.markdown(entry.get("answer", ""))
+                    if entry.get("special_note"):
+                        st.info(entry["special_note"])
         st.divider()

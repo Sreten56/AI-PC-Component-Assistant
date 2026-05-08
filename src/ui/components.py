@@ -39,7 +39,8 @@ def render_product_card(item: Mapping[str, object], *, key_prefix: str = "card")
     name = str(item.get("name", "Unknown component"))
     category = str(item.get("category", ""))
     store = str(item.get("store", ""))
-    url = str(item.get("url", ""))
+    raw_url = item.get("url")
+    url = raw_url.strip() if isinstance(raw_url, str) else ""
     thumbnail = str(item.get("thumbnail", "")) or "https://placehold.co/400x300?text=No+Image"
 
     with st.container(border=True):

@@ -197,9 +197,9 @@ def search_pc_prices(
         if max_price is not None and price_eur is not None and price_eur > float(max_price):
             continue
 
-        url = str(result.get("url", "")).strip()
-        if not url:
-            continue
+        raw_url = result.get("url")
+        url = str(raw_url).strip() if isinstance(raw_url, str) else ""
+        listing_url: str | None = url or None
 
         thumbnail = _extract_image_url(result, category)
         if index < len(top_images):
@@ -212,8 +212,8 @@ def search_pc_prices(
                 "name": title,
                 "category": category or "Live Listing",
                 "price_eur": price_eur,
-                "store": _extract_domain(url) or region,
-                "url": url,
+                "store": _extract_domain(listing_url or "") or region,
+                "url": listing_url,
                 "thumbnail": thumbnail,
                 "region": region,
             }

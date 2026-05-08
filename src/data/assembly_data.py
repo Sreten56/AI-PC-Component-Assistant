@@ -126,6 +126,12 @@ def _build_steps(lang_code: str) -> list[dict]:
 if len(_BASE_IMAGE_PATHS) != _EXPECTED_STEPS:
     raise ValueError(f"Image path list must contain exactly {_EXPECTED_STEPS} entries.")
 
+# Critical local filename checks requested by the project owner.
+if not _BASE_IMAGE_PATHS[1].lower().endswith(".png"):
+    raise ValueError("Step 2 image must use .png extension.")
+if not _BASE_IMAGE_PATHS[10].lower().endswith(".gif"):
+    raise ValueError("Step 11 image must use .gif extension.")
+
 
 ASSEMBLY_STEPS_BY_LANG = {code: _build_steps(code) for code in _TEXTS_BY_LANG}
 
