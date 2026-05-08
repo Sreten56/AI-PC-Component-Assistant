@@ -21,7 +21,13 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(messag
 def main() -> None:
     st.set_page_config(
         page_title="PC AI Component Assistant",
+        page_icon="🧩",
         layout="wide",
+        menu_items={
+            "Get Help": None,
+            "Report a bug": None,
+            "About": None,
+        },
     )
 
     mode = render_sidebar()

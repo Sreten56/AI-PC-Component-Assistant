@@ -65,8 +65,8 @@ def render_search_view() -> None:
                 region=region_clean.strip() or "Serbia",
                 category=effective_category,
             )
-        except Exception as exc:  # noqa: BLE001 - surface tool failure to user
-            st.error(f"Search failed: {exc}")
+        except Exception:  # noqa: BLE001 - surface tool failure to user
+            st.error("Service unavailable. Please try again shortly.")
             return
 
     filter_note = (

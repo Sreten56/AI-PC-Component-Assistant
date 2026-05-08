@@ -1,6 +1,8 @@
 # Environment (secrets — never commit)
 .env
 .env.local
+.env.*
+!.env.example
 .streamlit/secrets.toml
 
 # Note: src/static/images/ is intentionally tracked for the assembly guide.

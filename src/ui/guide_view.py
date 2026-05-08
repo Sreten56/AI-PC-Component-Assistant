@@ -20,6 +20,7 @@ from src.ui.sanitize import sanitize_chat_input
 logger = logging.getLogger(__name__)
 
 _PROJECT_ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
+_STATIC_IMAGES_ROOT = (_PROJECT_ROOT / "src" / "static" / "images").resolve()
 _PLACEHOLDER_PATH = "src/static/images/placeholder.jpg"
 _HISTORY_KEY = "guide_history"
 _LANG_OPTIONS = (
@@ -117,23 +118,26 @@ def _ui_strings(language_code: str) -> dict[str, str]:
 
 
 def _resolve_local_image_path(relative_path: str) -> str | None:
-    full_path = os.path.join(str(_PROJECT_ROOT), relative_path)
-    if not os.path.exists(full_path):
+    candidate = (_PROJECT_ROOT / relative_path).resolve()
+    # Block path traversal and restrict reads to src/static/images.
+    try:
+        candidate.relative_to(_STATIC_IMAGES_ROOT)
+    except ValueError:
+        logger.warning("Blocked non-static image path: %s", relative_path)
         return None
-    ext = pathlib.Path(full_path).suffix.lower()
+    if not candidate.exists():
+        return None
+    ext = candidate.suffix.lower()
     if ext not in {".jpg", ".jpeg", ".png", ".gif", ".webp"}:
-        logger.warning("Unsupported local image extension: %s", full_path)
+        logger.warning("Unsupported local image extension: %s", candidate)
         return None
-    return full_path
+    return str(candidate)
 
 
 def _load_local_image(relative_path: str) -> Image.Image | None:
     """Load local image using project-root-joined relative path."""
-    full_path = os.path.join(str(_PROJECT_ROOT), relative_path)
-    if not os.path.exists(full_path):
-        return None
-    ext = pathlib.Path(full_path).suffix.lower()
-    if ext not in {".jpg", ".jpeg", ".png", ".gif", ".webp"}:
+    full_path = _resolve_local_image_path(relative_path)
+    if not full_path:
         return None
     try:
         with Image.open(full_path) as img:

@@ -53,14 +53,13 @@ def discover_model(settings: Settings | None = None, timeout: float = 10.0) -> s
         payload = response.json()
     except (requests.RequestException, ValueError) as exc:
         raise ConfigError(
-            "Could not discover a model from "
-            f"{url}: {exc}. Set UKISAI_MODEL in .env to bypass discovery."
+            "Model discovery failed. Set UKISAI_MODEL in .env to bypass discovery."
         ) from exc
 
     items = payload.get("data") if isinstance(payload, dict) else payload
     if not isinstance(items, list) or not items:
         raise ConfigError(
-            f"Models endpoint at {url} returned no entries. "
+            "Models endpoint returned no entries. "
             "Set UKISAI_MODEL in .env to bypass discovery."
         )
 
@@ -73,7 +72,7 @@ def discover_model(settings: Settings | None = None, timeout: float = 10.0) -> s
 
     if not ids:
         raise ConfigError(
-            f"Models endpoint at {url} returned an unexpected shape. "
+            "Models endpoint returned an unexpected shape. "
             "Set UKISAI_MODEL in .env to bypass discovery."
         )
 

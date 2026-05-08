@@ -109,6 +109,18 @@ def _extract_domain(url: str) -> str:
     return netloc.lower().replace("www.", "")
 
 
+def _normalize_listing_url(value: Any) -> str | None:
+    if not isinstance(value, str):
+        return None
+    url = value.strip()
+    if not url:
+        return None
+    parsed = urlparse(url)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        return None
+    return url
+
+
 def _clean_product_name(result: dict[str, Any]) -> str:
     title = str(result.get("title", "")).strip()
     title = re.sub(r"\s*\|\s*.*$", "", title)
@@ -182,7 +194,7 @@ def search_pc_prices(
         )
     except Exception as exc:  # noqa: BLE001
         logger.exception("Tavily search failed for %s (%s)", component_name, region)
-        raise RuntimeError(f"Live search failed: {exc}") from exc
+        raise RuntimeError("Service unavailable.") from exc
 
     results = payload.get("results", [])
     top_images = payload.get("images", []) if isinstance(payload.get("images"), list) else []
@@ -197,9 +209,7 @@ def search_pc_prices(
         if max_price is not None and price_eur is not None and price_eur > float(max_price):
             continue
 
-        raw_url = result.get("url")
-        url = str(raw_url).strip() if isinstance(raw_url, str) else ""
-        listing_url: str | None = url or None
+        listing_url = _normalize_listing_url(result.get("url"))
 
         thumbnail = _extract_image_url(result, category)
         if index < len(top_images):

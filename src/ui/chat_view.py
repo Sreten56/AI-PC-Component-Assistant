@@ -30,6 +30,12 @@ def _clean_assistant_text(raw_text: str) -> str:
         "",
         text,
     )
+    # Remove explicit function-call snippets and argument dumps.
+    text = re.sub(r"(?is)search_pc_prices\s*\([^)]*\)", "", text)
+    text = re.sub(r"(?im)^\s*(query|region|max_price|category|limit)\s*=\s*.*$", "", text)
+    text = re.sub(r"(?im)^\s*arguments?\s*:\s*\{.*$", "", text)
+    text = re.sub(r"(?im)^\s*\{?\s*\"?(query|region|max_price|category|limit)\"?\s*:\s*.*$", "", text)
+    text = re.sub(r"(?im)^.*\b\w+\s*\([^)]*(query|region|max_price|category|limit)[^)]*\).*$", "", text)
 
     # Remove common thought blocks.
     text = re.sub(r"(?is)<think>.*?</think>", "", text)
@@ -47,6 +53,8 @@ def _clean_assistant_text(raw_text: str) -> str:
             or lower.startswith("function call:")
             or lower.startswith("assistant_thought:")
             or lower.startswith("pozivam alat")
+            or "query=" in lower
+            or "region=" in lower
         ):
             continue
         filtered_lines.append(line)
@@ -59,8 +67,8 @@ def _get_agent():
     if _AGENT_KEY not in st.session_state:
         try:
             st.session_state[_AGENT_KEY] = build_consultant_agent()
-        except AgentBuildError as exc:
-            st.error(str(exc))
+        except AgentBuildError:
+            st.error("Service unavailable. Please try again shortly.")
             return None
     return st.session_state[_AGENT_KEY]
 
@@ -124,12 +132,9 @@ def render_chat_view() -> None:
         with st.spinner("Thinking and pricing parts..."):
             try:
                 response = agent.chat(user_message)
-            except Exception as exc:  # noqa: BLE001 - surface every chat failure
+            except Exception:  # noqa: BLE001 - surface every chat failure
                 logger.exception("Consultant agent chat failed")
-                st.error(
-                    f"The consultant could not respond: {exc}. "
-                    "Check the UkisAI endpoint and try again."
-                )
+                st.error("Service unavailable. Please try again shortly.")
                 return
 
         answer = _clean_assistant_text(str(response))
